@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.github.jose92"
-version = "1.4"
+version = "1.5"
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))

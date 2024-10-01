@@ -69,7 +69,7 @@ jobs:
           git tag -a "v$VERSION" -m "Release version $VERSION"
           git push origin "v$VERSION"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       # Create GitHub Release
       - name: Create GitHub Release
@@ -80,4 +80,4 @@ jobs:
           body: |
             Release notes for version ${{ steps.tag_version.outputs.VERSION }}.
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
