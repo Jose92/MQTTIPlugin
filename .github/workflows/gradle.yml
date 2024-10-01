@@ -46,3 +46,38 @@ jobs:
         with:
           name: gradle-plugin
           path: ./plugin/build/libs/*.jar
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Create a new version tag
+      - name: Bump version and push tag
+        id: tag_version
+        run: |
+          # Extract the current version from build.gradle.kts or build.gradle
+          VERSION=$(./gradlew getVersion -q | grep "version=" | awk -F'=' '{print $2}')
+          echo "Version is $VERSION"
+          
+          # Create a new tag
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "Release version $VERSION"
+          git push origin "v$VERSION"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Create GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.tag_version.outputs.VERSION }}
+          name: Release v${{ steps.tag_version.outputs.VERSION }}
+          body: |
+            Release notes for version ${{ steps.tag_version.outputs.VERSION }}.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

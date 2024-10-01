@@ -13,6 +13,12 @@ dependencies {
     compileOnly("com.android.tools.build:gradle:8.2.1")
 }
 
+tasks.register("getVersion") {
+    doLast {
+        println("version=$version")
+    }
+}
+
 gradlePlugin {
     plugins {
         create("mqttPlugin") {
